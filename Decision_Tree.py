@@ -3,8 +3,8 @@ import numpy as np
 import pandas as pd
 from sklearn.datasets import load_breast_cancer
 from sklearn.model_selection import KFold
-
-
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier
 
 # 计算数据集x的经验熵H(x)
 def calc_ent(x):
@@ -164,7 +164,8 @@ if __name__ == '__main__':
     train_data = data.data
     train_data = np.concatenate((train_data, target[:,np.newaxis]), axis=1)
     kfolds = KFold(n_splits=5, shuffle=True)
-    acc_list = []
+    my_acc_list = []
+    sk_acc_list = []
     for f_data,f_target in kfolds.split(train_data,target):
         train_array = None
         test_array = None
@@ -179,15 +180,22 @@ if __name__ == '__main__':
                 test_array =  train_data[i,:][np.newaxis,:]
             else:
                 test_array = np.concatenate((train_array,train_data[i,:][np.newaxis,:]),axis=0)
-        print (train_array.shape)
-        print (test_array.shape)
+
+        dtc = DecisionTreeClassifier()
+        dtc.fit(train_array[:,:30],train_array[:,-1])
         decision_tree = recursive_train(train_array[:,:30],train_array[:,-1],train_tree=root_node,mode='root')
+        y_predict = dtc.predict(test_array[:,:30])
+        sk_acc_list.append(np.sum(test_array[:,-1]==y_predict)/float(test_array.shape[0]))
         correct_num = 0
         for item in test_array:
             result = recursive_predict(decision_tree,item[:30])
             if result == item[-1]:
                 correct_num+=1
-        acc_list.append(float(correct_num)/test_array.shape[0])
-        print (float(correct_num)/test_array.shape[0])
+        my_acc_list.append(float(correct_num)/test_array.shape[0])
+    plt.subplot(121)
+    plt.bar(range(5),sk_acc_list)
+    plt.subplot(122)
+    plt.bar(range(5),my_acc_list)
+    plt.show()
 
         
