@@ -163,7 +163,8 @@ if __name__ == '__main__':
     target = data.target
     train_data = data.data
     train_data = np.concatenate((train_data, target[:,np.newaxis]), axis=1)
-    kfolds = KFold(n_splits=5, shuffle=True)
+    n_splits=2
+    kfolds = KFold(n_splits=n_splits, shuffle=True)
     my_acc_list = []
     sk_acc_list = []
     for f_data,f_target in kfolds.split(train_data,target):
@@ -193,9 +194,11 @@ if __name__ == '__main__':
                 correct_num+=1
         my_acc_list.append(float(correct_num)/test_array.shape[0])
     plt.subplot(121)
-    plt.bar(range(5),sk_acc_list)
+    print (sk_acc_list)
+    plt.bar(range(n_splits),sk_acc_list)
     plt.subplot(122)
-    plt.bar(range(5),my_acc_list)
+    print (my_acc_list)
+    plt.bar(range(n_splits),my_acc_list)
     plt.show()
 
         
