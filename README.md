@@ -10,5 +10,5 @@ it will plot a bar-chart to show the difference between my version and skilearn 
 
 This repo only implemented C4.5 alogrithm
 
-![Image text](https://github.com/lenyou/decision_pratice/plot.png)
+![Image text](https://github.com/lenyou/decision_pratice/blob/master/plot.png)
 

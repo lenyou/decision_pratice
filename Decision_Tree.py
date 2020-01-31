@@ -163,7 +163,7 @@ if __name__ == '__main__':
     target = data.target
     train_data = data.data
     train_data = np.concatenate((train_data, target[:,np.newaxis]), axis=1)
-    n_splits=2
+    n_splits=5
     kfolds = KFold(n_splits=n_splits, shuffle=True)
     my_acc_list = []
     sk_acc_list = []
@@ -180,12 +180,15 @@ if __name__ == '__main__':
             if test_array is None:
                 test_array =  train_data[i,:][np.newaxis,:]
             else:
-                test_array = np.concatenate((train_array,train_data[i,:][np.newaxis,:]),axis=0)
+                test_array = np.concatenate((test_array,train_data[i,:][np.newaxis,:]),axis=0)
 
         dtc = DecisionTreeClassifier()
         dtc.fit(train_array[:,:30],train_array[:,-1])
         decision_tree = recursive_train(train_array[:,:30],train_array[:,-1],train_tree=root_node,mode='root')
         y_predict = dtc.predict(test_array[:,:30])
+        print (train_array.shape)
+        print (test_array[:,-1].shape)
+        print (y_predict.shape)
         sk_acc_list.append(np.sum(test_array[:,-1]==y_predict)/float(test_array.shape[0]))
         correct_num = 0
         for item in test_array:
@@ -195,8 +198,12 @@ if __name__ == '__main__':
         my_acc_list.append(float(correct_num)/test_array.shape[0])
     plt.subplot(121)
     print (sk_acc_list)
+    plt.title('sklean version')
+    plt.ylabel('acc')
     plt.bar(range(n_splits),sk_acc_list)
     plt.subplot(122)
+    plt.title('homework version')
+    plt.ylabel('acc')
     print (my_acc_list)
     plt.bar(range(n_splits),my_acc_list)
     plt.show()
