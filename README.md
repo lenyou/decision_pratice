@@ -1,5 +1,5 @@
 # decision_pratice
-This is the fist homework for Advanced Mehine Learning Class
+This is the fist homework for Advanced Mechine Learning Class
 
 How to run
 python Decision_Tree.
